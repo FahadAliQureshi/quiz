@@ -15,26 +15,31 @@ const HintButton = ({ hint, setElapsedTime }) => {
   };
 
   return (
-    <div style={{ height :'70px', marginBottom :'20px',width : '150px', justifyContent :'center',justifyItems :'center',alignItems : 'center'}}>
-     
-    
+    <div
+      style={{
+        height: "70px",
+        marginBottom: "20px",
+        width: "150px",
+        justifyContent: "center",
+        justifyItems: "center",
+        alignItems: "center",
+      }}
+    >
       <div className="questionsMain">
-      
-
         <button
           onClick={() => {
             handleHint();
             // plusFive()
           }}
         >
-          רֶמֶז
+          רמז
         </button>
       </div>
       {showHint && (
-          <div className="hintPop">
-            <span>רמז: {hint}</span>
-          </div>
-        )}
+        <div className="hintPop">
+          <span>רמז: {hint}</span>
+        </div>
+      )}
     </div>
   );
 };

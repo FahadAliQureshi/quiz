@@ -72,7 +72,7 @@ const Quiz = () => {
         <div className="navbar">
           <h1 className="isra">ישראלי ישראלי</h1>
           <h1 className="sw">
-            סטוֹפֶּר
+          סטופר
             <div
               style={{
                 marginLeft: 10,
