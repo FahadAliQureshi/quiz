@@ -1,0 +1,116 @@
+.wrapper {
+  width: 100%;
+}
+
+.navbar {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  height: 120px;
+  background: #006cce;
+  color: white;
+  align-items: center;
+  height: 70px;
+}
+
+.isra {
+  padding-left: 170px;
+  color: #b2f5ff;
+  font-size: 25px;
+  font-weight: 400;
+}
+
+.sw {
+  padding-right: 170px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #b2f5ff;
+  font-size: 25px;
+  font-weight: 400;
+}
+
+.quizpage {
+  background: white;
+  width: 70%;
+  margin-top: 25px;
+  padding-bottom: 65px;
+}
+
+.page {
+  background: #eeeeee;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.quizpage h1 {
+  display: flex;
+  justify-content: center;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.send {
+  background: #10681a;
+  color: white;
+  border: none;
+  margin-right: 780px;
+  display: flex;
+  width: 8%;
+  justify-content: center;
+  height: 50px;
+  text-align: center;
+  border-radius: 11px;
+  align-items: center;
+  font-size: 24px;
+  margin-top: 10px;
+}
+
+.sendMain {
+  padding: 0%;
+  margin: 0px;
+  background: white;
+  width: 80%;
+  align-self: center;
+  background: #2565ae;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.lastQuestion {
+  padding-bottom: 60px;
+}
+
+.nameID {
+  display: flex;
+  flex-direction: column;
+  margin-left: 40px;
+  margin-top: 30px;
+  /* padding: 20px; */
+  font-size: 25px;
+  align-items: center;
+  justify-content: center;
+}
+
+.nameID input {
+  margin-left: 20px;
+  width: 200px;
+  border: none;
+  border-radius: 5px;
+  border-bottom: none !important;
+  background: #eeeeee;
+  padding: 12px;
+  /* margin-top: 10px; */
+  justify-content: center;
+  outline: none;
+}
+
+.quizpage h1{
+    margin-top: 55px;
+}
+
+.nameID label{
+    margin-left: 10px;
+}
