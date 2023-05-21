@@ -2,42 +2,47 @@ import React, { useContext, useEffect, useState } from "react";
 import "./quiz.css";
 import Question from "./Question";
 import Stopwatch from "./Stopwatch";
-import QuestionsData from "../constants/Data";
+import QuestionsData2 from "../constants/Data2";
 import header from "../assets/images/header.jpeg";
 import footer1 from "../assets/images/footer1.jpeg";
 import footer2 from "../assets/images/footer2.jpeg";
-
-import { Outlet, Link } from "react-router-dom";
 import { StoreContext } from "../context/contextStore";
+import Modal from "react-modal";
 
-// const {
-//     FormWithConstraints,
-//     FieldFeedbacks,
-//     FieldFeedback
-//   } = ReactFormWithConstraints;
-
-function redirectToPage2() {
-  // Change the window location to "page2"
-  window.location.href = "/page2";
-}
-
-const Quiz = () => {
-  const [questionsData, setQuestionsData] = useState([]);
-
+const Quiz2 = () => {
   useEffect(() => {
-    setQuestionsData(QuestionsData);
+    const handleBackButtonPress = (event) => {
+      event.preventDefault();
+      // Add your custom logic here
+      // Perform any actions you want when the back button is pressed
+      window.location.href = "/";
+      console.log("Back button pressed");
+    };
+
+    // Add an event listener to the "popstate" event
+    window.addEventListener("popstate", handleBackButtonPress);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("popstate", handleBackButtonPress);
+    };
   }, []);
-
+  const [questionsData2, setQuestionsData2] = useState(QuestionsData2);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [elapsedTimeFinal, setElapsedTimeFinal] = useState(0);
+  const [modalIsOpen, setIsOpen] = React.useState(false);
 
-  // import React, { useState } from "react";
-  // import "./quiz.css";
-  // import Question from "./Question";
-  // import Stopwatch from "./Stopwatch";
-  // import QuestionsData from "../constants/Data";
+  function openModal() {
+    setIsOpen(true);
+  }
 
-  // const Quiz = () => {
-  //   const [questionsData, setQuestionsData] = useState(QuestionsData);
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
   const [fullName, setFullName] = useState("");
   const [idNumber, setIdNumber] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -47,130 +52,104 @@ const Quiz = () => {
 
   const [isNextPage, setIsNextPage] = useState(false);
 
-  const { correctAnswers, setCorrectAnswers } = useContext(StoreContext);
+  const [finalResult, setFinalResult] = useState(0);
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
 
+    const formattedMinutes = String(minutes).padStart(2, "0");
+    const formattedSeconds = String(remainingSeconds).padStart(2, "0");
+
+    return `${formattedMinutes}:${formattedSeconds}`;
+  }
+
+  const [firstTime, setFirstTime] = useState(true);
   useEffect(() => {
-    localStorage.setItem("value1", "0");
-    localStorage.setItem("value2", "0");
+    setElapsedTime(Number(localStorage.getItem("timer1")));
   }, []);
+  useEffect(() => {
+    const storedValue = localStorage.getItem("value1");
+    const storedValue2 = localStorage.getItem("value2");
+    console.log("STORED VALUE==================", storedValue, storedValue2);
+    setFinalResult(Number(storedValue) + Number(storedValue2));
+    // Use the retrieved value as needed
+  }, [localStorage.getItem("value2")]);
+
+  const { correctAnswers2, correctAnswers, setCorrectAnswers2 } =
+    useContext(StoreContext);
+  console.log("MY COCOCOCO ===============", correctAnswers);
   const updateAnswer = (text, index) => {
-    const updatedQuestionsData = [...questionsData];
-    updatedQuestionsData[index].answer = text;
-    setQuestionsData(updatedQuestionsData);
+    const updatedQuestionsData2 = [...questionsData2];
+    updatedQuestionsData2[index].answer = text;
+    setQuestionsData2(updatedQuestionsData2);
   };
 
   const checkForSubmit = () => {
-    // const newData = questionsData.map((item, index) => {
-    //   if (item.answer == item.solution) {
-    //     console.log("CORRECT ========", item);
-    //     return {
-    //       ...item,
-    //       isCorrect: true,
-    //     };
-    //   } else if (item.answer != item.solution) {
-    //     return {
-    //       ...item,
-    //       isCorrect: false,
-    //     };
-    //   }
-    //   return {
-    //     ...item,
-    //   };
-    // });
-    // setQuestionsData(newData);
-    // const correctItems = newData.filter((item) => item?.isCorrect === true);
-    // setCorrectAnswers(correctItems.length);
-    // const final = correctItems.length;
-    // localStorage.setItem("value1", final.toString());
+    const newData = questionsData2.map((item, index) => {
+      if (item.answer == item.solution) {
+        console.log("CORRECT ========", item);
+        return {
+          ...item,
+          isCorrect: true,
+        };
+      } else if (item.answer != item.solution) {
+        return {
+          ...item,
+          isCorrect: false,
+        };
+      }
+      return {
+        ...item,
+      };
+    });
+    setQuestionsData2(newData);
+    const correctItems = newData.filter((item) => item?.isCorrect === true);
+    setCorrectAnswers2(correctItems.length);
+    const final = correctItems.length;
 
-    // localStorage.setItem("timer1", elapsedTime.toString());
-    const isAnyQuestionUnanswered = questionsData.some(
+    // localStorage.setItem("result", elapsedTimeFinal.toString());
+    // localStorage.setItem("result", finalResult.toString());
+
+    localStorage.setItem("value2", final.toString());
+    setElapsedTimeFinal(elapsedTime);
+    const isAnyQuestionUnanswered = questionsData2.some(
       (question) => question.answer === ""
     );
 
-    console.log(
-      "IS VALIDs ================",
-      isFullNameValid,
-      isIdNumberValid,
-      isPhoneNumberValid
-    );
-
-    if (fullName && idNumber && phoneNumber && !isAnyQuestionUnanswered) {
-      redirectToPage2();
-      // setIsNextPage(true);
+    if (
+      isFullNameValid &&
+      isIdNumberValid &&
+      isPhoneNumberValid &&
+      !isAnyQuestionUnanswered
+    ) {
+      //   setIsNextPage(true);
     }
 
     if (isAnyQuestionUnanswered) {
       alert("Please answer all the questions before submitting.");
-    } else if (fullName && idNumber && phoneNumber) {
-      console.log(questionsData);
-      const newData = questionsData.map((item, index) => {
-        if (item.answer == item.solution) {
-          console.log("CORRECT ========", item);
-          return {
-            ...item,
-            isCorrect: true,
-          };
-        } else if (item.answer != item.solution) {
-          return {
-            ...item,
-            isCorrect: false,
-          };
-        }
-        return {
-          ...item,
-        };
-      });
-      setQuestionsData(newData);
-      const correctItems = newData.filter((item) => item?.isCorrect === true);
-      setCorrectAnswers(correctItems.length);
-      const final = correctItems.length;
-      localStorage.setItem("value1", final.toString());
-
-      localStorage.setItem("timer1", elapsedTime.toString());
-      // setIsNextPage(true);
-
-      // alert("Submitted");
     } else {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth", // Optional: Add smooth scrolling animation
-      });
-      alert("Some credentials are missings");
+      console.log(questionsData2);
+      openModal();
+      //   alert("Submitted");
     }
   };
 
   const handleFullNameChange = (event) => {
     const { value } = event.target;
-    console.log("NAME ==========", value);
-
     setFullName(value);
-    if (value == "") {
-      console.log("FALSEsdakmdk");
-      setIsFullNameValid(false);
-    } else {
-      setIsFullNameValid(true);
-    }
+    setIsFullNameValid(value !== "");
   };
 
   const handleIdNumberChange = (event) => {
     const { value } = event.target;
     setIdNumber(value);
-    if (value == "") {
-      setIsIdNumberValid(false);
-    } else {
-      setIsIdNumberValid(true);
-    }
+    setIsIdNumberValid(value !== "");
   };
 
   const handlePhoneNumberChange = (event) => {
     const { value } = event.target;
     setPhoneNumber(value);
-    if (value == "") {
-      setIsPhoneNumberValid(false);
-    } else {
-      setIsPhoneNumberValid(true);
-    }
+    setIsPhoneNumberValid(value !== "");
   };
 
   return (
@@ -201,7 +180,7 @@ const Quiz = () => {
           </div>
           <div className="page">
             <div className="quizpage">
-              <div className="nameID">
+              {/* <div className="nameID">
                 <div
                   style={{
                     flexDirection: "row",
@@ -216,7 +195,7 @@ const Quiz = () => {
                     required
                   />
                   <div className="nameLabel">
-                    <div className="nameLabelDiv" style={{ width: "169px" }}>
+                    <div style={{ width: "169px" }}>
                       <label htmlFor="">שם מלא</label>
                     </div>
                   </div>
@@ -247,7 +226,7 @@ const Quiz = () => {
                     required
                   />
                   <div className="nameLabel">
-                    <div className="nameLabelDiv" style={{ width: "169px" }}>
+                    <div style={{ width: "169px" }}>
                       <label htmlFor="">תעודת זהות</label>
                     </div>
                   </div>
@@ -278,7 +257,7 @@ const Quiz = () => {
                     required
                   />
                   <div className="nameLabel">
-                    <div className="nameLabelDiv" style={{ width: "169px" }}>
+                    <div style={{ width: "169px" }}>
                       <label htmlFor="">מספר טלפון</label>
                     </div>
                   </div>
@@ -295,14 +274,14 @@ const Quiz = () => {
                     מספר טלפון הוא שדה חובה
                   </div>
                 )}
-              </div>
+              </div> */}
               <h1>שאלות</h1>
-              {questionsData.map((item, index) => (
+              {questionsData2.map((item, index) => (
                 <Question
                   setElapsedTime={setElapsedTime}
                   setData={updateAnswer}
-                  myArray={questionsData}
-                  setMyArray={setQuestionsData}
+                  myArray={questionsData2}
+                  setMyArray={setQuestionsData2}
                   index={index}
                   item={item}
                 />
@@ -318,10 +297,55 @@ const Quiz = () => {
               onClick={checkForSubmit}
               title="Send"
             >
-              הבא
+              שלח
             </button>
           </div>
-          {/* <div>{correctAnswers}</div> */}
+          {/* <div>{correctAnswers2 + correctAnswers}</div>
+           */}
+          {/* <div>{finalResult}</div> */}
+          {/* <div>Completion Time: {formatTime(elapsedTimeFinal)}</div> */}
+
+          {/* <div>sadasdsa</div> */}
+          <Modal
+            isOpen={modalIsOpen}
+            onAfterOpen={afterOpenModal}
+            onRequestClose={() => {
+              closeModal();
+              window.location.href = "/";
+            }}
+            // style={customStyles}
+            contentLabel="Example Modal"
+          >
+            {/* <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Hello</h2> */}
+            <div
+              style={{
+                alignItems: "center",
+                display: "flex",
+
+                alignSelf: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div
+                style={{
+                  //   alignItems: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+
+                  //   alignSelf: "center",
+                  //   justifyContent: "flex-end",
+                }}
+              >
+                <h2>זמן השלמה</h2>
+
+                <h3>{formatTime(elapsedTimeFinal)}</h3>
+
+                <h2>ציון</h2>
+                <h3>{finalResult}</h3>
+              </div>
+            </div>
+          </Modal>
         </div>
       ) : (
         <div className="wrapper">
@@ -439,12 +463,12 @@ const Quiz = () => {
                 )}
               </div>
               <h1>שאלות</h1>
-              {questionsData.map((item, index) => (
+              {questionsData2.map((item, index) => (
                 <Question
                   setElapsedTime={setElapsedTime}
                   setData={updateAnswer}
-                  myArray={questionsData}
-                  setMyArray={setQuestionsData}
+                  myArray={questionsData2}
+                  setMyArray={setQuestionsData2}
                   index={index}
                   item={item}
                 />
@@ -452,23 +476,20 @@ const Quiz = () => {
             </div>
           </div>
           <div className="page">
-            {/* <link to="/page2"> */}
             <button
               disabled={
                 !isFullNameValid || !isIdNumberValid || !isPhoneNumberValid
               }
               className="send"
-              onClick={() => {
-                checkForSubmit();
-                redirectToPage2();
-              }}
+              onClick={checkForSubmit}
               title="Send"
             >
-              הַבָּא
+              שלח
             </button>
-            {/* </link> */}
           </div>
-          {/* <div>{correctAnswers}</div> */}
+          {/* <div>{correctAnswers2 + correctAnswers}</div> */}
+          {/* <div>{finalResult}</div> */}
+          {/* <div>Completion Time: {formatTime(elapsedTimeFinal)}</div> */}
         </div>
       )}
 
@@ -484,200 +505,4 @@ const Quiz = () => {
   );
 };
 
-export default Quiz;
-
-//   const [elapsedTime, setElapsedTime] = useState(0);
-
-//   const updateAnswer = (text, index) => {
-//     const updatedQuestionsData = [...questionsData];
-//     updatedQuestionsData[index].answer = text;
-//     setQuestionsData(updatedQuestionsData);
-//   };
-
-//   const checkForSubmit = () => {
-//     const isAnyQuestionUnanswered = questionsData.some(
-//       (question) => question.answer === ""
-//     );
-
-//     if (isAnyQuestionUnanswered) {
-//       alert("Please answer all the questions before submitting.");
-//     } else {
-//       console.log(questionsData);
-//       alert("Submitted");
-//     }
-//   };
-
-//   const sendButtonDisabled = questionsData.some(
-//     (question) => question.answer === ""
-//   );
-
-//   return (
-//     <>
-//       <div className="wrapper">
-//         <div className="navbar">
-//           <h1 className="isra">ישראלי ישראלי</h1>
-//           <h1 className="sw">
-//             סטוֹפֶּר
-//             <div
-//               style={{
-//                 marginLeft: 10,
-//               }}
-//             >
-//               <Stopwatch
-//                 elapsedTime={elapsedTime}
-//                 setElapsedTime={setElapsedTime}
-//               />
-//             </div>
-//           </h1>
-//         </div>
-//         <div className="page">
-//           <div className="quizpage">
-//             <div className="nameID">
-//               <div
-//                 style={{
-//                   flexDirection: "row",
-//                   display: "flex",
-//                   marginTop: "20px",
-//                 }}
-//               >
-//                 <input type="text" required />
-//                 <div className="nameLabel">
-//                   <div style={{ width: "169px" }}>
-//                     <label htmlFor="">שם מלא</label>
-//                   </div>
-//                 </div>
-//               </div>
-//               <div
-//                 style={{
-//                   flexDirection: "row",
-//                   display: "flex",
-//                   marginTop: "20px",
-//                 }}
-//               >
-//                 <input type="text" required />
-//                 <div className="nameLabel">
-//                   <div style={{ width: "169px" }}>
-//                     <label htmlFor="">תעודת זהות</label>
-//                   </div>
-//                 </div>
-//               </div>
-
-//               <div
-//                 style={{
-//                   flexDirection: "row",
-//                   display: "flex",
-//                   marginTop: "20px",
-//                 }}
-//               >
-//                 <input type="text" required />
-//                 <div className="nameLabel">
-//                   <div style={{ width: "169px" }}>
-//                     <label htmlFor="">מספר טלפון</label>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//             <h1>שאלות</h1>
-//             {questionsData.map((item, index) => (
-//               <Question
-//                 setElapsedTime={setElapsedTime}
-//                 setData={updateAnswer}
-//                 index={index}
-//                 item={item}
-//               />
-//             ))}
-//           </div>
-//         </div>
-//         <div className="page">
-//           <button
-//             // disabled={sendButtonDisabled}
-//             className="send"
-//             onClick={checkForSubmit}
-//             title="Send"
-//           >
-//             שלח
-//           </button>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Quiz;
-
-// import React, { useState } from "react";
-// import "./quiz.css";
-// import Question from "./Question";
-// import Stopwatch from "./Stopwatch";
-// import QuestionsData from "../constants/Data";
-
-// const Quiz = () => {
-//   const [questionsData, setQuestionsData] = useState(QuestionsData);
-//   const [sendButton, setSendButton] = useState(true);
-
-//   const updateAnswer = (text, index) => {
-//     let data = questionsData[index];
-//     data.answer = text;
-
-//     console.log({data})
-
-//     let allQuestions = questionsData;
-//     questionsData[index] = data;
-
-//     let check = true;
-//     for (var i = 0; i < questionsData.length; i++) {
-//       if (questionsData[i].answer === "") {
-//         check = true;
-//         return;
-//       }
-//       check = false;
-//     }
-//     setSendButton(check);
-//     setQuestionsData(allQuestions);
-//   };
-
-//   const checkForSubmit = () => {
-//     console.log(questionsData)
-//     alert("Submitted");
-//   };
-
-//   return (
-//     <>
-//       <div className="wrapper">
-//         <div className="navbar">
-//           <h1 className="isra">Israeli Israeli</h1>
-//           <h1 className="sw">
-//             StopWatch <Stopwatch />
-//           </h1>
-//         </div>
-//         <div className="page">
-//           <div className="quizpage">
-//             <h1>questions</h1>
-//             {questionsData.map((item, index) => {
-//               return (
-//                 <>
-//                   <Question setData={updateAnswer} index={index} item={item} />
-//                 </>
-//               );
-//             })}
-//           </div>
-//         </div>
-//         <div className="page">
-//           {/* <p className="send">Send</p> */}
-//           <button
-//             disabled={sendButton}
-//             className="send"
-//             onClick={() => {
-//               checkForSubmit();
-//             }}
-//             title="Send"
-//           >
-//             Send
-//           </button>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Quiz;
+export default Quiz2;

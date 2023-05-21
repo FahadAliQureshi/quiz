@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-const Stopwatch = ({elapsedTime,setElapsedTime}) => {
+const Stopwatch = ({ elapsedTime, setElapsedTime }) => {
   const [isRunning, setIsRunning] = useState(true);
-//   const [elapsedTime, setElapsedTime] = useState(0);
+  //   const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
     let intervalId;
 
     if (isRunning) {
       intervalId = setInterval(() => {
-        setElapsedTime(prevElapsedTime => prevElapsedTime + 1);
+        setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
       }, 1000);
     }
 
@@ -19,7 +19,7 @@ const Stopwatch = ({elapsedTime,setElapsedTime}) => {
   }, [isRunning]);
 
   const handleStartStop = () => {
-    setIsRunning(prevIsRunning => !prevIsRunning);
+    setIsRunning((prevIsRunning) => !prevIsRunning);
   };
 
   const handleReset = () => {
@@ -27,14 +27,14 @@ const Stopwatch = ({elapsedTime,setElapsedTime}) => {
     setElapsedTime(0);
   };
 
-  const formatTime = time => {
+  const formatTime = (time) => {
     const seconds = time % 60;
     const minutes = Math.floor(time / 60) % 60;
     const hours = Math.floor(time / 3600);
 
-    return `${hours.toString().padStart(2, '0')}:
-            ${minutes.toString().padStart(2, '0')}:
-            ${seconds.toString().padStart(2, '0')}`;
+    return `${hours.toString().padStart(2, "0")}:
+            ${minutes.toString().padStart(2, "0")}:
+            ${seconds.toString().padStart(2, "0")}`;
   };
 
   return (

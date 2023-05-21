@@ -2,8 +2,7 @@ import React from 'react';
 import './hint.css'
 
 const Hint = ({ hint }) => {
-  return
-  <div>Hint: {hint}</div>;
+  return <div>Hint: {hint}</div>;
 };
 
 export default Hint;

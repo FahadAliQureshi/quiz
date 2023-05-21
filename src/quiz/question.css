@@ -36,3 +36,34 @@ input[type='text']{
         display: flex;
     }
 
+
+    @media screen and (max-width: 480px) {
+
+      
+    .questionsMain input{
+        height: 65px!important;
+        width: 78%;
+        border: none;
+        background: #EEEEEE;
+        outline: none;
+        margin-left: 15px;
+        margin-right: 10px;
+        font-size: large;
+    }
+    .questions{
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 16px;
+    }
+    
+
+    }
+
+
+
+    @media screen and (max-width: 380px) {
+        .questionsMain input{
+height: 60px!important;
+        }
+}
+

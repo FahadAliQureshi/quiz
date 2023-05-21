@@ -10,12 +10,13 @@ const HintButton = ({ hint, setElapsedTime }) => {
     setShowHint(true);
     setTimeout(() => {
       setShowHint(false);
-    }, 3000);
-    setElapsedTime((prev) => prev + 5);
+    }, 99999999999999999999);
+    setElapsedTime((prev) => prev + 300);
   };
 
   return (
-    <div
+    <div>
+    <div className="questionsMainMain"
       style={{
         height: "70px",
         marginBottom: "20px",
@@ -35,12 +36,20 @@ const HintButton = ({ hint, setElapsedTime }) => {
           רמז
         </button>
       </div>
-      {showHint && (
-        <div className="hintPop">
+     
+    </div>
+    {showHint && (
+        <div
+        style={{
+          position:"absolute",
+        marginTop:-17
+        }}
+        className="hintPop">
           <span>רמז: {hint}</span>
         </div>
       )}
     </div>
+
   );
 };
 
